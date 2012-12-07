@@ -2,8 +2,9 @@ package se.technipelago
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.hssf.usermodel.HSSFRow
-import org.apache.poi.hssf.usermodel.HSSFCell
-import org.apache.poi.hssf.usermodel.HSSFDateUtil
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.DateUtil
+import org.apache.poi.xssf.usermodel.XSSFDataFormat
 import org.apache.poi.ss.usermodel.Workbook
 
 import se.technipelago.ExcelBuilderX
@@ -23,9 +24,6 @@ class ExcelBuilder {
 	static Class getRowClass(){
 		HSSFRow;
 	};
-	static Class getCellClass(){
-		HSSFCell;
-	};
 
 	static Class getWorkbookClass(){
 		HSSFWorkbook;
@@ -44,14 +42,14 @@ class ExcelBuilder {
 			}
 			def value
 			switch(cell.cellType) {
-				case cellClass.CELL_TYPE_NUMERIC:
-					if(HSSFDateUtil.isCellDateFormatted(cell)) {
+				case Cell.CELL_TYPE_NUMERIC:
+					if(DateUtil.isCellDateFormatted(cell)) {
 						value = cell.dateCellValue
 					} else {
 						value = cell.numericCellValue
 					}
 					break
-				case cellClass.CELL_TYPE_BOOLEAN:
+				case Cell.CELL_TYPE_BOOLEAN:
 					value = cell.booleanCellValue
 					break
 				default:

@@ -10,9 +10,6 @@ class ExcelBuilderX extends ExcelBuilder{
 	static Class getRowClass(){
 		XSSFRow;
 	};
-	static Class getCellClass(){
-		XSSFCell;
-	};
 
 	static Class getWorkbookClass(){
 		XSSFWorkbook;
