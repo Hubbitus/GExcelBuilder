@@ -4,6 +4,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.hssf.usermodel.HSSFRow
 import org.apache.poi.hssf.usermodel.HSSFCell
 import org.apache.poi.hssf.usermodel.HSSFDateUtil
+import org.apache.poi.ss.usermodel.Workbook
+
+import se.technipelago.ExcelBuilderX
 
 /**
  * Groovy Builder that extracts data from
@@ -13,26 +16,42 @@ import org.apache.poi.hssf.usermodel.HSSFDateUtil
  */
 class ExcelBuilder {
 
-	def workbook
+	Workbook workbook
 	def labels
 	def row
 
+	static Class getRowClass(){
+		HSSFRow;
+	};
+	static Class getCellClass(){
+		HSSFCell;
+	};
+
+	static Class getWorkbookClass(){
+		HSSFWorkbook;
+	};
+
+	/**
+	 * Use factory method to create object.
+	 *
+	 * @param fileName
+	 */
 	ExcelBuilder(String fileName) {
-		HSSFRow.metaClass.getAt = { int idx ->
+		rowClass.metaClass.getAt = { int idx ->
 			def cell = delegate.getCell(idx)
 			if(!cell) {
 				return null
 			}
 			def value
 			switch(cell.cellType) {
-				case HSSFCell.CELL_TYPE_NUMERIC:
+				case cellClass.CELL_TYPE_NUMERIC:
 					if(HSSFDateUtil.isCellDateFormatted(cell)) {
 						value = cell.dateCellValue
 					} else {
 						value = cell.numericCellValue
 					}
 					break
-				case HSSFCell.CELL_TYPE_BOOLEAN:
+				case cellClass.CELL_TYPE_BOOLEAN:
 					value = cell.booleanCellValue
 					break
 				default:
@@ -43,7 +62,7 @@ class ExcelBuilder {
 		}
 
 		new File(fileName).withInputStream { is ->
-			workbook = new HSSFWorkbook(is)
+			workbook = workbookClass.newInstance(is);
 		}
 	}
 
@@ -88,6 +107,15 @@ class ExcelBuilder {
 		while(rowIterator.hasNext() && linesRead++ < max) {
 			row = rowIterator.next()
 			closure.call(row)
+		}
+	}
+
+	public static ExcelBuilder factory(String fileName){
+		if ( (fileName =~ /(?i)\.xlsx$/ ) ){
+			return new ExcelBuilderX(fileName);
+		}
+		else{
+			return new ExcelBuilder(fileName);
 		}
 	}
 }

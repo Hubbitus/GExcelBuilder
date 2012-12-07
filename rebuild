@@ -1,0 +1,4 @@
+
+gradle jar
+find ~/.groovy/grapes/ -iname '*ExcelBuilder*.jar' -delete
+./register.mvn
