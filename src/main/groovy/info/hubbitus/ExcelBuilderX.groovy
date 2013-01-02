@@ -1,10 +1,10 @@
-package se.technipelago
+package info.hubbitus
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFRow
 import org.apache.poi.xssf.usermodel.XSSFCell
 
-import se.technipelago.ExcelBuilder
+import info.hubbitus.ExcelBuilder
 
 class ExcelBuilderX extends ExcelBuilder{
 	static Class getRowClass(){

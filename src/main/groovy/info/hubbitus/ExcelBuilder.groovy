@@ -1,4 +1,4 @@
-package se.technipelago
+package info.hubbitus
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.hssf.usermodel.HSSFRow
@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.DateUtil
 import org.apache.poi.xssf.usermodel.XSSFDataFormat
 import org.apache.poi.ss.usermodel.Workbook
 
-import se.technipelago.ExcelBuilderX
+import info.hubbitus.ExcelBuilderX
 
 /**
  * Groovy Builder that extracts data from
