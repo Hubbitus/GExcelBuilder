@@ -1,11 +1,16 @@
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'idea'
+// http://central.sonatype.org/pages/gradle.html
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 
 // Got from http://www.technipelago.se/content/technipelago/blog/44
 // Gradle file written by me
 
-version="0.1-SNAPSHOT"
+group = 'info.hubbitus'
+version = '0.1.1'
 
 repositories {
     mavenCentral()
@@ -18,3 +23,75 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi', version: '[3.8-beta5,)'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '[3.8-beta5,)'
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2'
+}
+
+///////////////////////////////////////////////////////////////
+// Artifacts publishing into central OSS repository
+// http://central.sonatype.org/pages/gradle.html
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+signing {
+//    required { gradle.taskGraph.hasTask("uploadArchives") } // https://groups.google.com/forum/#!topic/gaelyk/WfdEDBOzIOM
+    sign configurations.archives
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'GExcelBuilder'
+                packaging 'jar'
+                description 'Groovy builder makes reading Microsoft Excel documents a breeze. F.e. with it you can write the following code to insert customers into your Grails database'
+                url 'https://github.com/Hubbitus/GExcelBuilder'
+
+                scm {
+                    connection 'scm:git:https://github.com/Hubbitus/GExcelBuilder.git'
+                    developerConnection 'scm:git:https://github.com/Hubbitus/GExcelBuilder.git'
+                    url 'https://github.com/Hubbitus/GExcelBuilder'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'Hubbitus'
+                        name 'Pavel Alexeev'
+                        email 'Pahan@Hubbitus.info'
+                    }
+                }
+            }
+        }
+    }
+}
+// /Artifacts publishing into central OSS repository
+////////////////////////////////////////////////////
