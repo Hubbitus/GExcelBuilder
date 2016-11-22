@@ -9,16 +9,16 @@ Groovy builder makes reading Microsoft Excel documents a breeze. F.e. With it yo
 new ExcelBuilder("customers.xls").eachLine([labels:true]) {
     new Person(name:"$firstname $lastname", address:address, telephone:phone).save()
 }
-````
-If the spreadsheet has no labels on the first row, you can use numeric index to access cells:
 ```
+If the spreadsheet has no labels on the first row, you can use numeric index to access cells:
+```groovy
 new ExcelBuilderX("customers.xlsx").eachLine {
   println "First column on row ${it.rowNum} = ${cell(0)}"
 }
 ```
 
 In that repository version supports additional xls and xlsx files for the sane way via automatically detection file format in factory like:
-```
+```groovy
 ExcelBuilder xls = ExcelBuilder.factory(xlsfile);
 ```
 
